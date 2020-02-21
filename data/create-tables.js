@@ -26,7 +26,7 @@ async function run() {
             make VARCHAR(256) NOT NULL,
             url VARCHAR(256) NOT NULL,
             year INTEGER NOT NULL,
-            left_handed BOOLEAN NOT NULL
+            is_left_handed BOOLEAN NOT NULL
         );
     `);
 
