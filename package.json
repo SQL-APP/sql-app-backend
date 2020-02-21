@@ -1,0 +1,22 @@
+{
+  "name": "sql-app-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SQL-APP/sql-app-backend.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SQL-APP/sql-app-backend/issues"
+  },
+  "homepage": "https://github.com/SQL-APP/sql-app-backend#readme"
+}
