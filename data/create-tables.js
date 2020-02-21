@@ -11,6 +11,7 @@ run();
 
 async function run() {
     // make a new pg client to the supplied url
+    // const client = new Client(process.env.DATABASE_URL);
     const client = new Client(process.env.DATABASE_URL);
 
     try {
@@ -21,12 +22,11 @@ async function run() {
         await client.query(`
         CREATE TABLE guitars (
             id SERIAL PRIMARY KEY NOT NULL,
-            name VARCHAR(256) NOT NULL,
-            type VARCHAR(256) NOT NULL,
+            model VARCHAR(256) NOT NULL,
+            make VARCHAR(256) NOT NULL,
             url VARCHAR(256) NOT NULL,
             year INTEGER NOT NULL,
-            lives INTEGER NOT NULL,
-            is_sidekick BOOLEAN NOT NULL
+            left_handed BOOLEAN NOT NULL
         );
     `);
 
