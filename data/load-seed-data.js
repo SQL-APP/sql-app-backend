@@ -2,7 +2,7 @@ require('dotenv').config();
 const pg = require('pg');
 const Client = pg.Client;
 // import seed data:
-const data = require('./data.js');
+const guitars = require('./guitars.js');
 
 run();
 
@@ -14,12 +14,18 @@ async function run() {
     
         // "Promise all" does a parallel execution of async tasks
         await Promise.all(
-            // map every item in the array data
-            data.map( guitars => {
+            // for every cat data, we want a promise to insert into the db
+            guitars.map(guitar => {
 
-                // Use a "parameterized query" to insert the data,
-                // Don't forget to "return" the client.query promise!
-                
+                // This is the query to insert a cat into the db.
+                // First argument is the function is the "parameterized query"
+                return client.query(`
+                    INSERT INTO guitars (model, make, url, year, is_left_handed)
+                    VALUES ($1, $2, $3, $4, $5);
+                `,
+                    // Second argument is an array of values for each parameter in the query:
+                [guitar.model, guitar.make, guitar.url, guitar.year, guitar.is_left_handed]);
+
             })
         );
 
