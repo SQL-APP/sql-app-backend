@@ -15,7 +15,7 @@ async function run() {
         // "Promise all" does a parallel execution of async tasks
         await Promise.all(
             // map every item in the array data
-            data.map(item => {
+            data.map( guitars => {
 
                 // Use a "parameterized query" to insert the data,
                 // Don't forget to "return" the client.query promise!
