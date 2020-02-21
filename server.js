@@ -20,6 +20,7 @@ app.use(morgan('dev')); // http logging
 app.use(cors()); // enable CORS request
 
 app.use(express.static('assets'));
+
 // API Routes
 
 app.get('/api/guitars', async(req, res) => {
