@@ -21,25 +21,77 @@ app.use(cors()); // enable CORS request
 
 app.use(express.static('assets'));
 
+app.use(express.json()); // enable reading incoming json data
+
 // API Routes
 
 app.get('/api/guitars', async(req, res) => {
     try {
+        // const result = await client.query(`
+        //     SELECT
+        //         id,
+        //         model,
+        //         make,
+        //         url,
+        //         year,
+        //         is_left_handed
+        //     FROM GUITARS;
+        // `);
         const result = await client.query(`
-            SELECT
-                id,
-                model,
-                make,
-                url,
-                year,
-                is_left_handed
-            FROM GUITARS;
-        `);
+        SELECT
+            g.*,
+            m.name as type
+        FROM guitars g
+        JOIN make m
+        ON  g.make_id = g.id
+        ORDER BY g.year;
+    `);
 
         console.log(result.rows);
 
         res.json(result.rows);
     } catch (err) {
+        res.status(500).json({
+            error: err.message || err
+        });
+    }
+});
+
+app.post('/api/guitars', async(req, res) => {
+    const guitar = req.body;
+
+    try {
+        const result = await client.query(`
+            INSERT INTO guitars (make, make_id, model, url, year, is_left_handed)
+            VALUES ($1, $2, $3, $4, $5, $6)
+            RETURNING *;
+        `,
+        [guitar.make, guitar.makeId, guitar.model, guitar.url, guitar.year, guitar.is_left_handed]
+        );
+        
+        res.json(result.rows[0]);
+    }
+    catch (err) {
+        console.log(err);
+        res.status(500).json({
+            error: err.message || err
+        });
+    }
+});
+
+// *** TYPES ***
+app.get('/api/make', async(req, res) => {
+    try {
+        const result = await client.query(`
+            SELECT *
+            FROM make
+            ORDER BY make;
+        `);
+
+        res.json(result.rows);
+    }
+    catch (err) {
+        console.log(err);
         res.status(500).json({
             error: err.message || err
         });
