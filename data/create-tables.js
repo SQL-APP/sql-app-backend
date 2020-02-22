@@ -20,10 +20,15 @@ async function run() {
     
         // run a query to create tables
         await client.query(`
+        CREATE TABLE make (
+            id SERIAL PRIMARY KEY NOT NULL,
+            make VARCHAR(256) NOT NULL
+        );
+
         CREATE TABLE guitars (
             id SERIAL PRIMARY KEY NOT NULL,
+            make_id INTEGER NOT NULL REFERENCES make(id),
             model VARCHAR(256) NOT NULL,
-            make VARCHAR(256) NOT NULL,
             url VARCHAR(256) NOT NULL,
             year INTEGER NOT NULL,
             is_left_handed BOOLEAN NOT NULL
