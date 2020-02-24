@@ -98,6 +98,45 @@ app.get('/api/make', async(req, res) => {
     }
 });
 
+// app.get('/api/guitars/:guitarID', async(req, res) => {
+//     try {
+//         const result = await client.query(`
+//             SELECT *
+//             FROM guitars
+//             WHERE guitars.id = 
+//         `);
+
+//         res.json(result.rows);
+//     }
+//     catch (err) {
+//         console.log(err);
+//         res.status(500).json({
+//             error: err.message || err
+//         });
+//     }
+// });
+
+
+app.get('/api/guitars/:guitarId', async(req, res) => {
+    try {
+        const result = await client.query(`
+            SELECT *
+            FROM guitars
+            WHERE guitars.id=$1`, 
+            // the second parameter is an array of values to be SANITIZED then inserted into the query
+            // i only know this because of the `pg` docs
+        [req.params.guitarID]);
+
+        res.json(result.rows);
+    }
+    catch (err) {
+        console.log(err);
+        res.status(500).json({
+            error: err.message || err
+        });
+    }
+});
+
 // Start the server
 app.listen(PORT, () => {
     console.log('server running on PORT', PORT);
