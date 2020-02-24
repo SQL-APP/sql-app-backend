@@ -122,7 +122,7 @@ app.get('/api/guitars/:guitarId', async(req, res) => {
         const result = await client.query(`
             SELECT *
             FROM guitars
-            WHERE guitars.id=$1`, 
+            WHERE guitars.model=$1`, 
             // the second parameter is an array of values to be SANITIZED then inserted into the query
             // i only know this because of the `pg` docs
         [req.params.guitarID]);
