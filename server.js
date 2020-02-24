@@ -43,7 +43,7 @@ app.get('/api/guitars', async(req, res) => {
             m.name as type
         FROM guitars g
         JOIN make m
-        ON  g.make_id = g.id
+        ON  g.make_id = m.id
         ORDER BY g.year;
     `);
 
