@@ -80,13 +80,14 @@ app.post('/api/guitars', async(req, res) => {
 });
 
 // *** TYPES ***
-app.get('/api/make', async(req, res) => {
+app.get('/api/makes', async(req, res) => {
     try {
         const result = await client.query(`
             SELECT *
             FROM make
             ORDER BY make;
         `);
+        console.log(req);
 
         res.json(result.rows);
     }
