@@ -9,7 +9,7 @@ module.exports = [
     {
         model: 'EDS-1275',
         make: 'Gibson',
-        url: '/1997-Gibson-EDS-1275.jpg',
+        url: 'https://rocky-cove-46033.herokuapp.com/1997-Gibson-EDS-1275.jpg',
         year: 1997,
         is_left_handed: false
     },
