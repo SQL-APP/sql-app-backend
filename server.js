@@ -47,7 +47,7 @@ app.get('/api/guitars', async(req, res) => {
         ORDER BY g.year;
     `);
 
-        console.log(result.rows);
+        // console.log(result.rows);
 
         res.json(result.rows);
     } catch (err) {
@@ -117,7 +117,7 @@ app.get('/api/make', async(req, res) => {
 // });
 
 
-app.get('/api/guitars/:guitarId', async(req, res) => {
+app.get('/api/guitars/:guitarID', async(req, res) => {
     try {
         const result = await client.query(`
             SELECT *
@@ -126,6 +126,7 @@ app.get('/api/guitars/:guitarId', async(req, res) => {
             // the second parameter is an array of values to be SANITIZED then inserted into the query
             // i only know this because of the `pg` docs
         [req.params.guitarID]);
+        console.log('thing', req.params.guitarID);
 
         res.json(result.rows);
     }
