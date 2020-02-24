@@ -40,7 +40,7 @@ app.get('/api/guitars', async(req, res) => {
         const result = await client.query(`
         SELECT
             g.*,
-            m.name as type
+            m.make as make
         FROM guitars g
         JOIN make m
         ON  g.make_id = m.id
