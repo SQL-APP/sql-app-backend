@@ -126,7 +126,8 @@ app.get('/api/guitars/:guitarID', async(req, res) => {
             WHERE guitars.model=$1`, 
             // the second parameter is an array of values to be SANITIZED then inserted into the query
             // i only know this because of the `pg` docs
-        [Number(req.params.guitarID)]);
+        [req.params.guitarID]);
+        // [Number(req.params.guitarID)]);
         console.log('thing', req.params.guitarID);
 
         res.json(result.rows);
