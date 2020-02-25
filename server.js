@@ -22,7 +22,7 @@ app.use(cors()); // enable CORS request
 app.use(express.static('assets'));
 
 app.use(express.json()); // enable reading incoming json data
-
+app.use(express.urlencoded({ extended: true }));
 // API Routes
 
 app.get('/api/guitars', async(req, res) => {
@@ -59,14 +59,14 @@ app.get('/api/guitars', async(req, res) => {
 
 app.post('/api/guitars', async(req, res) => {
     const guitar = req.body;
-
+    console.log(guitar);
     try {
         const result = await client.query(`
-            INSERT INTO guitars (make, make_id, model, url, year, is_left_handed)
-            VALUES ($1, $2, $3, $4, $5, $6)
+            INSERT INTO guitars (make_id, model, url, year, is_left_handed)
+            VALUES ($1, $2, $3, $4, $5)
             RETURNING *;
         `,
-        [guitar.make, guitar.makeId, guitar.model, guitar.url, guitar.year, guitar.is_left_handed]
+        [guitar.make_id, guitar.model, guitar.url, guitar.year, guitar.is_left_handed]
         );
         
         res.json(result.rows[0]);
