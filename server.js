@@ -123,7 +123,7 @@ app.get('/api/guitars/:guitarID', async(req, res) => {
         const result = await client.query(`
             SELECT *
             FROM guitars
-            WHERE guitars.model=$1`, 
+            WHERE guitars.id=$1`, 
             // the second parameter is an array of values to be SANITIZED then inserted into the query
             // i only know this because of the `pg` docs
         [req.params.guitarID]);
@@ -140,22 +140,47 @@ app.get('/api/guitars/:guitarID', async(req, res) => {
     }
 });
 
-// app.put('/api/guitars', async (req, res) => {
-//     // using req.body instead of req.params or req.query (which belong to /GET requests)
-//     try {
-//         console.log(req.body);
-//         // make a new cat out of the cat that comes in req.body;
-//         const result = await client.query(`
-//             UPDATE cats
-//             SET name = '${req.body.name}', 
-//                 is_sidekick = '${req.body.is_sidekick}', 
-//                 lives = '${req.body.lives}', 
-//                 year = '${req.body.year}', 
-//                 url = '${req.body.url}',
-//                 type_id = '${req.body.type_id}'
-//             WHERE id = ${req.body.id};
-//         `,
-//     );
+app.put('/api/guitars', async(req, res) => {
+    // using req.body instead of req.params or req.query (which belong to /GET requests)
+    try {
+        console.log(req.body);
+        // make a new cat out of the cat that comes in req.body;
+        const result = await client.query(`
+            UPDATE guitars
+            SET model = '${req.body.model}', 
+                is_left_handed = '${req.body.is_left_handed}', 
+                year = '${req.body.year}', 
+                url = '${req.body.url}',
+                make_id = '${req.body.make_id}'
+            WHERE id = ${req.body.id};
+        `,
+        );
+
+        res.json(result.rows[0]); // return just the first result of our query
+    }
+    catch (err) {
+        console.log(err);
+        res.status(500).json({
+            error: err.message || err
+        });
+    }
+});
+
+app.delete('/api/guitars/:GuitarId', async(req, res) => {
+    try {
+        const result = await client.query(`
+        DELETE FROM guitars where id = ${req.params.GuitarId} 
+        `);
+
+        res.json(result.rows);
+    }
+    catch (err) {
+        console.log(err);
+        res.status(500).json({
+            error: err.message || err
+        });
+    }
+});
 
 // Start the server
 app.listen(PORT, () => {
