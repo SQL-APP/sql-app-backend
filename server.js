@@ -126,7 +126,7 @@ app.get('/api/guitars/:guitarID', async(req, res) => {
             WHERE guitars.model=$1`, 
             // the second parameter is an array of values to be SANITIZED then inserted into the query
             // i only know this because of the `pg` docs
-        [req.params.guitarID]);
+        [Number(req.params.guitarID)]);
         console.log('thing', req.params.guitarID);
 
         res.json(result.rows);
@@ -138,6 +138,23 @@ app.get('/api/guitars/:guitarID', async(req, res) => {
         });
     }
 });
+
+// app.put('/api/guitars', async (req, res) => {
+//     // using req.body instead of req.params or req.query (which belong to /GET requests)
+//     try {
+//         console.log(req.body);
+//         // make a new cat out of the cat that comes in req.body;
+//         const result = await client.query(`
+//             UPDATE cats
+//             SET name = '${req.body.name}', 
+//                 is_sidekick = '${req.body.is_sidekick}', 
+//                 lives = '${req.body.lives}', 
+//                 year = '${req.body.year}', 
+//                 url = '${req.body.url}',
+//                 type_id = '${req.body.type_id}'
+//             WHERE id = ${req.body.id};
+//         `,
+//     );
 
 // Start the server
 app.listen(PORT, () => {
