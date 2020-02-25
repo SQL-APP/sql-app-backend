@@ -22,7 +22,7 @@ app.use(cors()); // enable CORS request
 app.use(express.static('assets'));
 
 app.use(express.json()); // enable reading incoming json data
-
+app.use(express.urlencoded({ extended: true }));
 // API Routes
 
 app.get('/api/guitars', async(req, res) => {
@@ -40,14 +40,14 @@ app.get('/api/guitars', async(req, res) => {
         const result = await client.query(`
         SELECT
             g.*,
-            m.name as type
+            m.make as make
         FROM guitars g
         JOIN make m
-        ON  g.make_id = g.id
+        ON  g.make_id = m.id
         ORDER BY g.year;
     `);
 
-        console.log(result.rows);
+        // console.log(result.rows);
 
         res.json(result.rows);
     } catch (err) {
@@ -59,14 +59,14 @@ app.get('/api/guitars', async(req, res) => {
 
 app.post('/api/guitars', async(req, res) => {
     const guitar = req.body;
-
+    console.log(guitar);
     try {
         const result = await client.query(`
-            INSERT INTO guitars (make, make_id, model, url, year, is_left_handed)
-            VALUES ($1, $2, $3, $4, $5, $6)
+            INSERT INTO guitars (make_id, model, url, year, is_left_handed)
+            VALUES ($1, $2, $3, $4, $5)
             RETURNING *;
         `,
-        [guitar.make, guitar.makeId, guitar.model, guitar.url, guitar.year, guitar.is_left_handed]
+        [guitar.make_id, guitar.model, guitar.url, guitar.year, guitar.is_left_handed]
         );
         
         res.json(result.rows[0]);
@@ -80,13 +80,14 @@ app.post('/api/guitars', async(req, res) => {
 });
 
 // *** TYPES ***
-app.get('/api/make', async(req, res) => {
+app.get('/api/makes', async(req, res) => {
     try {
         const result = await client.query(`
             SELECT *
             FROM make
             ORDER BY make;
         `);
+        console.log(req);
 
         res.json(result.rows);
     }
@@ -97,6 +98,64 @@ app.get('/api/make', async(req, res) => {
         });
     }
 });
+
+// app.get('/api/guitars/:guitarID', async(req, res) => {
+//     try {
+//         const result = await client.query(`
+//             SELECT *
+//             FROM guitars
+//             WHERE guitars.id = 
+//         `);
+
+//         res.json(result.rows);
+//     }
+//     catch (err) {
+//         console.log(err);
+//         res.status(500).json({
+//             error: err.message || err
+//         });
+//     }
+// });
+
+
+app.get('/api/guitars/:guitarID', async(req, res) => {
+    try {
+        const result = await client.query(`
+            SELECT *
+            FROM guitars
+            WHERE guitars.model=$1`, 
+            // the second parameter is an array of values to be SANITIZED then inserted into the query
+            // i only know this because of the `pg` docs
+        [req.params.guitarID]);
+        // [Number(req.params.guitarID)]);
+        console.log('thing', req.params.guitarID);
+
+        res.json(result.rows);
+    }
+    catch (err) {
+        console.log(err);
+        res.status(500).json({
+            error: err.message || err
+        });
+    }
+});
+
+// app.put('/api/guitars', async (req, res) => {
+//     // using req.body instead of req.params or req.query (which belong to /GET requests)
+//     try {
+//         console.log(req.body);
+//         // make a new cat out of the cat that comes in req.body;
+//         const result = await client.query(`
+//             UPDATE cats
+//             SET name = '${req.body.name}', 
+//                 is_sidekick = '${req.body.is_sidekick}', 
+//                 lives = '${req.body.lives}', 
+//                 year = '${req.body.year}', 
+//                 url = '${req.body.url}',
+//                 type_id = '${req.body.type_id}'
+//             WHERE id = ${req.body.id};
+//         `,
+//     );
 
 // Start the server
 app.listen(PORT, () => {
